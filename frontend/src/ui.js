@@ -44,23 +44,23 @@ const selector = (state) => ({
 
 // MiniMap styling helper
 const miniMapStyle = {
-  backgroundColor: 'rgba(255, 255, 255, 0.7)',
+  backgroundColor: 'var(--bg-panels-glass)',
   backdropFilter: 'blur(8px)',
   WebkitBackdropFilter: 'blur(8px)',
-  border: '1px solid #E2E8F0',
+  border: '1px solid var(--border-color)',
   borderRadius: '12px',
-  boxShadow: '0 4px 12px rgba(15, 23, 42, 0.08)',
+  boxShadow: '0 4px 12px var(--shadow-color)',
   overflow: 'hidden',
 };
 
 // Controls styling helper
 const controlsStyle = {
-  backgroundColor: 'rgba(255, 255, 255, 0.7)',
+  backgroundColor: 'var(--bg-panels-glass)',
   backdropFilter: 'blur(8px)',
   WebkitBackdropFilter: 'blur(8px)',
-  border: '1px solid #E2E8F0',
+  border: '1px solid var(--border-color)',
   borderRadius: '10px',
-  boxShadow: '0 4px 12px rgba(15, 23, 42, 0.08)',
+  boxShadow: '0 4px 12px var(--shadow-color)',
   overflow: 'hidden',
   display: 'flex',
   flexDirection: 'column',
@@ -117,12 +117,12 @@ const PipelineInfoCard = () => {
         right: '16px',
         zIndex: 10,
         width: '160px',
-        background: 'rgba(255, 255, 255, 0.85)',
+        background: 'var(--bg-panels-glass)',
         backdropFilter: 'blur(8px)',
         WebkitBackdropFilter: 'blur(8px)',
-        border: '1px solid #E2E8F0',
+        border: '1px solid var(--border-color)',
         borderRadius: '12px',
-        boxShadow: '0 4px 16px rgba(15, 23, 42, 0.08)',
+        boxShadow: '0 4px 16px var(--shadow-color)',
         padding: '12px 14px',
         fontFamily: 'inherit',
         display: 'flex',
@@ -136,8 +136,8 @@ const PipelineInfoCard = () => {
         fontWeight: 700,
         textTransform: 'uppercase',
         letterSpacing: '0.04em',
-        color: '#64748B',
-        borderBottom: '1px solid rgba(226, 232, 240, 0.8)',
+        color: 'var(--text-secondary)',
+        borderBottom: '1px solid var(--border-color-subtle)',
         paddingBottom: '6px',
         display: 'flex',
         alignItems: 'center',
@@ -161,10 +161,10 @@ const PipelineInfoCard = () => {
             display: 'flex',
             justifyContent: 'space-between',
             fontSize: '12px',
-            color: '#334155'
+            color: 'var(--text-primary)'
           }}>
-            <span style={{ color: '#64748B', fontWeight: 500 }}>{item.label}</span>
-            <span style={{ fontWeight: 600, color: '#0F172A' }}>{item.value}</span>
+            <span style={{ color: 'var(--text-secondary)', fontWeight: 500 }}>{item.label}</span>
+            <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{item.value}</span>
           </div>
         ))}
       </div>
@@ -191,6 +191,7 @@ export const PipelineUI = () => {
     }
 
     const isExecuting = useStore((state) => state.isExecuting);
+    const theme = useStore((state) => state.theme);
 
     const onDrop = useCallback(
         (event) => {
@@ -242,7 +243,7 @@ export const PipelineUI = () => {
           style={{
             width: '100%', 
             height: '70vh',
-            background: 'radial-gradient(circle, #f8fafc 0%, #f1f5f9 100%)', // Subtle gradient
+            background: 'var(--bg-canvas)',
             position: 'relative'
           }}
         >
@@ -276,6 +277,20 @@ export const PipelineUI = () => {
               .react-flow__edge:hover .react-flow__edge-interaction {
                 stroke-width: 20px;
               }
+              
+              /* ReactFlow theme overrides */
+              .react-flow__controls-button {
+                background: var(--bg-cards-opaque) !important;
+                border-bottom: 1px solid var(--border-color) !important;
+                fill: var(--text-primary) !important;
+                color: var(--text-primary) !important;
+              }
+              .react-flow__controls-button:hover {
+                background: var(--bg-cards-hover) !important;
+              }
+              .react-flow__controls-button svg {
+                fill: currentColor !important;
+              }
             `}</style>
 
             {/* Centered empty canvas state */}
@@ -301,14 +316,14 @@ export const PipelineUI = () => {
                   maxWidth: '340px',
                   textAlign: 'center',
                   padding: '32px 24px',
-                  background: 'rgba(255, 255, 255, 0.45)',
+                  background: 'var(--bg-panels-glass)',
                   borderRadius: '16px',
-                  border: '1px dashed #CBD5E1',
-                  boxShadow: '0 8px 32px rgba(15, 23, 42, 0.04)',
+                  border: '1px dashed var(--border-color)',
+                  boxShadow: '0 8px 32px var(--shadow-color)',
                   backdropFilter: 'blur(6px)',
                   WebkitBackdropFilter: 'blur(6px)',
                 }}>
-                  <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                     <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
                     <line x1="9" y1="3" x2="9" y2="21"></line>
                     <line x1="15" y1="3" x2="15" y2="21"></line>
@@ -316,11 +331,11 @@ export const PipelineUI = () => {
                     <line x1="3" y1="15" x2="21" y2="15"></line>
                   </svg>
                   <div>
-                    <h3 style={{ margin: '0 0 6px', fontSize: '15px', fontWeight: 600, color: '#475569' }}>
+                    <h3 style={{ margin: '0 0 6px', fontSize: '15px', fontWeight: 600, color: 'var(--text-primary)' }}>
                        Build your workflow
                     </h3>
-                    <p style={{ margin: 0, fontSize: '12.5px', lineHeight: 1.45, color: '#64748B' }}>
-                      Drag nodes from the toolbar to begin creating a pipeline.
+                    <p style={{ margin: 0, fontSize: '12.5px', lineHeight: 1.45, color: 'var(--text-secondary)' }}>
+                       Drag nodes from the toolbar to begin creating a pipeline.
                     </p>
                   </div>
                 </div>
@@ -348,10 +363,11 @@ export const PipelineUI = () => {
                 nodesDraggable={!isExecuting}
                 nodesConnectable={!isExecuting}
                 elementsSelectable={!isExecuting}
+                deleteKeyCode={["Backspace", "Delete"]}
             >
-                <Background color="#CBD5E1" gap={gridSize} size={1.5} /> {/* Lighter dots */}
+                <Background color={theme === 'dark' ? '#334155' : '#CBD5E1'} gap={gridSize} size={1.5} /> {/* Lighter dots */}
                 <Controls style={controlsStyle} /> {/* Rounded controls */}
-                <MiniMap style={miniMapStyle} maskColor="rgba(241, 245, 249, 0.4)" nodeColor="#3B82F6" /> {/* Better minimap styling */}
+                <MiniMap style={miniMapStyle} maskColor={theme === 'dark' ? 'rgba(15, 23, 42, 0.6)' : 'rgba(241, 245, 249, 0.4)'} nodeColor="#3B82F6" /> {/* Better minimap styling */}
             </ReactFlow>
         </div>
         </>

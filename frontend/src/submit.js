@@ -92,8 +92,8 @@ const Spinner = () => (
 
 const SummaryCard = ({ label, value, accent }) => (
   <div style={{
-    background: '#f8fafc',
-    border: '1px solid #e2e8f0',
+    background: 'var(--bg-inputs)',
+    border: '1px solid var(--border-color)',
     borderRadius: '6px',
     padding: '6px 10px',
     display: 'flex',
@@ -103,24 +103,24 @@ const SummaryCard = ({ label, value, accent }) => (
     boxSizing: 'border-box',
     height: '32px'
   }}>
-    <span style={{ color: '#64748b', fontWeight: 500 }}>{label}</span>
-    <span style={{ color: accent || '#0f172a', fontWeight: 600 }}>{value}</span>
+    <span style={{ color: 'var(--text-secondary)', fontWeight: 500 }}>{label}</span>
+    <span style={{ color: accent || 'var(--text-primary)', fontWeight: 600 }}>{value}</span>
   </div>
 );
 
 const StatusItem = ({ label, isValid, isWarning }) => {
   let icon = '✓';
-  let color = '#10b981';
+  let color = 'var(--color-success)';
   if (isWarning) {
     icon = '⚠';
-    color = '#d97706';
+    color = 'var(--color-warning)';
   } else if (!isValid) {
     icon = '✗';
-    color = '#ef4444';
+    color = 'var(--color-error)';
   }
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', color: '#334155' }}>
+    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', color: 'var(--text-primary)' }}>
       <span style={{ color, fontWeight: 'bold', fontSize: '13px' }}>{icon}</span>
       <span>{label}</span>
     </div>
@@ -128,6 +128,7 @@ const StatusItem = ({ label, isValid, isWarning }) => {
 };
 
 const ResultModal = ({ result, error, onClose }) => {
+  const theme = useStore((state) => state.theme);
   const summary = result?.summary || {};
   const checks = result?.checks || [];
 
@@ -141,7 +142,7 @@ const ResultModal = ({ result, error, onClose }) => {
       style={{
         position: 'fixed',
         inset: 0,
-        backgroundColor: 'rgba(15, 23, 42, 0.4)',
+        backgroundColor: 'var(--modal-overlay)',
         backdropFilter: 'blur(4px)',
         WebkitBackdropFilter: 'blur(4px)',
         display: 'flex',
@@ -159,10 +160,10 @@ const ResultModal = ({ result, error, onClose }) => {
       <div
         className="responsive-modal-container"
         style={{
-          background: 'rgba(255, 255, 255, 0.98)',
-          border: '1px solid rgba(226, 232, 240, 0.8)',
+          background: 'var(--bg-panels-opaque)',
+          border: '1px solid var(--border-color)',
           borderRadius: '14px',
-          boxShadow: '0 20px 50px rgba(15, 23, 42, 0.15)',
+          boxShadow: '0 20px 50px var(--shadow-color)',
           width: 'min(720px, 92vw)',
           maxHeight: '90vh',
           boxSizing: 'border-box',
@@ -182,7 +183,7 @@ const ResultModal = ({ result, error, onClose }) => {
           display: 'flex', 
           alignItems: 'center', 
           gap: '10px', 
-          borderBottom: '1px solid rgba(226, 232, 240, 0.8)', 
+          borderBottom: '1px solid var(--border-color)', 
           paddingBottom: '12px',
           flexShrink: 0
         }}>
@@ -194,9 +195,15 @@ const ResultModal = ({ result, error, onClose }) => {
               width: '26px',
               height: '26px',
               borderRadius: '50%',
-              backgroundColor: summary.ready ? '#f0fdf4' : '#fef2f2',
-              border: summary.ready ? '1px solid #bbf7d0' : '1px solid #fecaca',
-              color: summary.ready ? '#16a34a' : '#dc2626',
+              backgroundColor: summary.ready 
+                ? (theme === 'dark' ? 'rgba(34, 197, 94, 0.12)' : '#f0fdf4')
+                : (theme === 'dark' ? 'rgba(239, 68, 68, 0.12)' : '#fef2f2'),
+              border: summary.ready 
+                ? (theme === 'dark' ? '1px solid rgba(34, 197, 94, 0.3)' : '1px solid #bbf7d0')
+                : (theme === 'dark' ? '1px solid rgba(239, 68, 68, 0.3)' : '1px solid #fecaca'),
+              color: summary.ready 
+                ? (theme === 'dark' ? '#4ade80' : '#16a34a')
+                : (theme === 'dark' ? '#f87171' : '#dc2626'),
               flexShrink: 0,
             }}>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
@@ -219,9 +226,9 @@ const ResultModal = ({ result, error, onClose }) => {
               width: '26px',
               height: '26px',
               borderRadius: '50%',
-              backgroundColor: '#fef2f2',
-              border: '1px solid #fecaca',
-              color: '#dc2626',
+              backgroundColor: theme === 'dark' ? 'rgba(239, 68, 68, 0.12)' : '#fef2f2',
+              border: theme === 'dark' ? '1px solid rgba(239, 68, 68, 0.3)' : '1px solid #fecaca',
+              color: theme === 'dark' ? '#f87171' : '#dc2626',
               flexShrink: 0,
             }}>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -237,7 +244,7 @@ const ResultModal = ({ result, error, onClose }) => {
               margin: '0',
               fontSize: '16px',
               fontWeight: 600,
-              color: '#0f172a',
+              color: 'var(--text-primary)',
             }}
           >
             {error ? 'Submission Failed' : 'Pipeline Validation Engine'}
@@ -252,9 +259,9 @@ const ResultModal = ({ result, error, onClose }) => {
                 margin: 0,
                 fontSize: '13px',
                 lineHeight: 1.5,
-                color: '#b91c1c',
-                backgroundColor: '#fef2f2',
-                border: '1px solid #fecaca',
+                color: theme === 'dark' ? '#f87171' : '#b91c1c',
+                backgroundColor: theme === 'dark' ? 'rgba(239, 68, 68, 0.12)' : '#fff5f5',
+                border: theme === 'dark' ? '1px solid rgba(239, 68, 68, 0.3)' : '1px solid #fecaca',
                 borderRadius: '8px',
                 padding: '12px',
               }}
@@ -276,7 +283,7 @@ const ResultModal = ({ result, error, onClose }) => {
             
             {/* Summary Grid (Fixed) */}
             <div style={{ flexShrink: 0 }}>
-              <h3 style={{ fontSize: '13px', fontWeight: 600, color: '#475569', margin: '0 0 8px 0' }}>Pipeline Summary</h3>
+              <h3 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-secondary)', margin: '0 0 8px 0' }}>Pipeline Summary</h3>
               <div 
                 className="responsive-summary-grid"
                 style={{ 
@@ -294,27 +301,27 @@ const ResultModal = ({ result, error, onClose }) => {
                 <SummaryCard 
                   label="Topology" 
                   value={summary.is_dag ? 'DAG' : 'Cyclic'} 
-                  accent={summary.is_dag ? '#16a34a' : '#dc2626'} 
+                  accent={summary.is_dag ? 'var(--color-success)' : 'var(--color-error)'} 
                 />
                 <SummaryCard 
                   label="Isolated Nodes" 
                   value={summary.isolated_nodes} 
-                  accent={summary.isolated_nodes > 0 ? '#d97706' : '#64748b'} 
+                  accent={summary.isolated_nodes > 0 ? 'var(--color-warning)' : 'var(--text-secondary)'} 
                 />
               </div>
             </div>
 
             {/* Core Validation Checklist (Fixed) */}
             <div style={{ flexShrink: 0 }}>
-              <h3 style={{ fontSize: '13px', fontWeight: 600, color: '#475569', margin: '0 0 8px 0' }}>Validation Checklist</h3>
+              <h3 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-secondary)', margin: '0 0 8px 0' }}>Validation Checklist</h3>
               <div style={{ 
                 display: 'grid', 
                 gridTemplateColumns: '1fr 1fr', 
                 gap: '6px 12px', 
                 padding: '10px 14px', 
-                background: '#f8fafc', 
+                background: 'var(--bg-inputs)', 
                 borderRadius: '8px', 
-                border: '1px solid #e2e8f0' 
+                border: '1px solid var(--border-color)' 
               }}>
                 <StatusItem label="Input node found" isValid={summary.inputs > 0} />
                 <StatusItem label="Output node found" isValid={summary.outputs > 0} />
@@ -333,7 +340,7 @@ const ResultModal = ({ result, error, onClose }) => {
               overflow: 'hidden', 
               minHeight: '80px'
             }}>
-              <h3 style={{ fontSize: '13px', fontWeight: 600, color: '#475569', margin: '0 0 8px 0', flexShrink: 0 }}>Detailed Logs</h3>
+              <h3 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-secondary)', margin: '0 0 8px 0', flexShrink: 0 }}>Detailed Logs</h3>
               <div 
                 className="custom-scroll-area"
                 style={{ 
@@ -349,20 +356,20 @@ const ResultModal = ({ result, error, onClose }) => {
                   const isErr = check.type === 'error' || check.severity === 'error';
                   const isWarn = check.type === 'warning' || check.severity === 'warning';
                   
-                  let bgColor = '#f0fdf4';
-                  let borderColor = '#bbf7d0';
-                  let textColor = '#15803d';
+                  let bgColor = theme === 'dark' ? 'rgba(34, 197, 94, 0.12)' : '#f0fdf4';
+                  let borderColor = theme === 'dark' ? 'rgba(34, 197, 94, 0.3)' : '#bbf7d0';
+                  let textColor = theme === 'dark' ? '#4ade80' : '#15803d';
                   let prefix = '✅';
 
                   if (isErr) {
-                    bgColor = '#fff5f5';
-                    borderColor = '#fecaca';
-                    textColor = '#b91c1c';
+                    bgColor = theme === 'dark' ? 'rgba(239, 68, 68, 0.12)' : '#fff5f5';
+                    borderColor = theme === 'dark' ? 'rgba(239, 68, 68, 0.3)' : '#fecaca';
+                    textColor = theme === 'dark' ? '#f87171' : '#b91c1c';
                     prefix = '❌';
                   } else if (isWarn) {
-                    bgColor = '#fffbeb';
-                    borderColor = '#fde68a';
-                    textColor = '#b45309';
+                    bgColor = theme === 'dark' ? 'rgba(245, 158, 11, 0.12)' : '#fffbeb';
+                    borderColor = theme === 'dark' ? 'rgba(245, 158, 11, 0.3)' : '#fde68a';
+                    textColor = theme === 'dark' ? '#fbbf24' : '#b45309';
                     prefix = '⚠';
                   }
 
@@ -403,7 +410,7 @@ const ResultModal = ({ result, error, onClose }) => {
           display: 'flex',
           flexDirection: 'column',
           gap: '10px',
-          borderTop: '1px solid #f1f5f9',
+          borderTop: '1px solid var(--border-color)',
           paddingTop: '12px',
           marginTop: '12px',
           flexShrink: 0
@@ -418,9 +425,15 @@ const ResultModal = ({ result, error, onClose }) => {
               alignItems: 'center',
               justifyContent: 'center',
               gap: '6px',
-              backgroundColor: summary.ready ? '#ecfdf5' : '#fff5f5',
-              border: summary.ready ? '1px solid #10b981' : '1px solid #ef4444',
-              color: summary.ready ? '#047857' : '#b91c1c',
+              backgroundColor: summary.ready 
+                ? (theme === 'dark' ? 'rgba(34, 197, 94, 0.12)' : '#ecfdf5')
+                : (theme === 'dark' ? 'rgba(239, 68, 68, 0.12)' : '#fff5f5'),
+              border: summary.ready 
+                ? (theme === 'dark' ? '1px solid rgba(34, 197, 94, 0.3)' : '1px solid #10b981')
+                : (theme === 'dark' ? '1px solid rgba(239, 68, 68, 0.3)' : '1px solid #ef4444'),
+              color: summary.ready 
+                ? (theme === 'dark' ? '#4ade80' : '#047857')
+                : (theme === 'dark' ? '#f87171' : '#b91c1c'),
               height: '32px',
               boxSizing: 'border-box'
             }}>
@@ -438,9 +451,9 @@ const ResultModal = ({ result, error, onClose }) => {
               style={{
                 padding: '6px 16px',
                 borderRadius: '6px',
-                border: '1px solid #CBD5E1',
-                backgroundColor: '#ffffff',
-                color: '#334155',
+                border: '1px solid var(--border-color)',
+                backgroundColor: 'var(--bg-inputs)',
+                color: 'var(--text-primary)',
                 fontSize: '12px',
                 fontWeight: 500,
                 cursor: 'pointer',
@@ -449,12 +462,12 @@ const ResultModal = ({ result, error, onClose }) => {
                 height: '32px'
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = '#F8FAFC';
-                e.currentTarget.style.borderColor = '#94A3B8';
+                e.currentTarget.style.backgroundColor = 'var(--bg-inputs-hover)';
+                e.currentTarget.style.borderColor = 'var(--color-primary)';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = '#ffffff';
-                e.currentTarget.style.borderColor = '#CBD5E1';
+                e.currentTarget.style.backgroundColor = 'var(--bg-inputs)';
+                e.currentTarget.style.borderColor = 'var(--border-color)';
               }}
               onClick={onClose}
             >
@@ -585,15 +598,15 @@ export const SubmitButton = () => {
           style={{
             padding: '12px 28px',
             borderRadius: '10px',
-            border: '1px solid #CBD5E1',
-            backgroundColor: isExecuting ? '#F8FAFC' : (isSubmitHovered ? '#F1F5F9' : '#ffffff'),
-            color: isExecuting ? '#94A3B8' : '#334155',
+            border: '1px solid var(--border-color)',
+            backgroundColor: isExecuting ? 'var(--bg-inputs)' : (isSubmitHovered ? 'var(--bg-inputs-hover)' : 'var(--bg-cards)'),
+            color: isExecuting ? 'var(--text-secondary)' : 'var(--text-primary)',
             fontSize: '14px',
             fontWeight: 600,
             cursor: (isLoading || isExecuting) ? 'not-allowed' : 'pointer',
             boxShadow: !isExecuting && isSubmitHovered 
-              ? '0 4px 12px rgba(15, 23, 42, 0.05)' 
-              : '0 2px 4px rgba(15, 23, 42, 0.02)',
+              ? '0 4px 12px var(--shadow-hover)' 
+              : '0 2px 4px var(--shadow-color)',
             transform: !isExecuting && isSubmitHovered && !isLoading ? 'translateY(-1px)' : 'none',
             transition: 'all 150ms cubic-bezier(0.4, 0, 0.2, 1)',
             outline: 'none',
@@ -619,14 +632,14 @@ export const SubmitButton = () => {
             padding: '12px 28px',
             borderRadius: '10px',
             border: 'none',
-            backgroundColor: isExecuting ? '#10B981' : (isRunHovered ? '#1D4ED8' : '#2563EB'),
+            backgroundColor: isExecuting ? 'var(--color-success)' : (isRunHovered ? 'var(--color-primary-hover)' : 'var(--color-primary)'),
             color: '#ffffff',
             fontSize: '14px',
             fontWeight: 600,
             cursor: (isLoading || isExecuting) ? 'not-allowed' : 'pointer',
             boxShadow: isRunHovered && !isExecuting
-              ? '0 6px 20px rgba(37, 99, 235, 0.3)' 
-              : '0 4px 12px rgba(37, 99, 235, 0.2)',
+              ? '0 6px 20px rgba(59, 130, 246, 0.3)' 
+              : '0 4px 12px rgba(59, 130, 246, 0.2)',
             transform: isRunHovered && !isExecuting && !isLoading ? 'translateY(-1px)' : 'none',
             transition: 'all 150ms cubic-bezier(0.4, 0, 0.2, 1)',
             outline: 'none',

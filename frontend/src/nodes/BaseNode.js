@@ -7,13 +7,13 @@ const globalStyleSheet = `
     transition: border-color 150ms ease, box-shadow 150ms ease, background-color 150ms ease;
   }
   .node-control:hover {
-    border-color: #94A3B8 !important;
-    background-color: #ffffff !important;
+    border-color: var(--color-primary) !important;
+    background-color: var(--bg-inputs-hover) !important;
   }
   .node-control:focus {
-    border-color: #2563EB !important;
-    background-color: #ffffff !important;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25) !important;
+    border-color: var(--color-primary) !important;
+    background-color: var(--bg-inputs-hover) !important;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25) !important;
   }
   .tactile-btn {
     transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
@@ -22,15 +22,15 @@ const globalStyleSheet = `
     transform: scale(0.96) !important;
   }
   .tactile-btn:focus-visible {
-    outline: 2px solid #2563EB !important;
+    outline: 2px solid var(--color-primary) !important;
     outline-offset: 2px;
   }
   .react-flow__handle {
     transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1) !important;
   }
   .react-flow__handle:active {
-    background: #1D4ED8 !important;
-    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.4), 0 0 12px rgba(37, 99, 235, 0.9), 0 2px 4px rgba(15, 23, 42, 0.15) !important;
+    background: var(--color-primary-hover) !important;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.4), 0 0 12px rgba(59, 130, 246, 0.9), 0 2px 4px var(--shadow-color) !important;
   }
   
   /* Keyboard selection focus borders for ReactFlow nodes */
@@ -38,8 +38,8 @@ const globalStyleSheet = `
     outline: none !important;
   }
   .react-flow__node:focus-visible > div {
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.45), 0 16px 40px rgba(15, 23, 42, 0.16) !important;
-    border-color: #2563EB !important;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.45), 0 16px 40px var(--shadow-color) !important;
+    border-color: var(--color-primary) !important;
   }
 `;
 
@@ -47,12 +47,12 @@ const globalStyleSheet = `
 const formControlStyle = {
   width: '100%',
   padding: '8px 12px',
-  border: '1px solid #CBD5E1',
+  border: '1px solid var(--border-color)',
   borderRadius: '8px',
   fontFamily: 'inherit',
   fontSize: '13px',
-  color: '#1e293b',
-  backgroundColor: 'rgba(255, 255, 255, 0.9)',
+  color: 'var(--text-primary)',
+  backgroundColor: 'var(--bg-inputs)',
   boxSizing: 'border-box',
   outline: 'none',
 };
@@ -61,7 +61,7 @@ const formControlStyle = {
 export const StyledInput = forwardRef((props, ref) => (
   <input
     ref={ref}
-    className="node-control"
+    className="nodrag node-control"
     {...props}
     style={{ ...formControlStyle, ...props.style }}
   />
@@ -70,7 +70,7 @@ export const StyledInput = forwardRef((props, ref) => (
 export const StyledTextarea = forwardRef((props, ref) => (
   <textarea
     ref={ref}
-    className="node-control"
+    className="nodrag node-control"
     {...props}
     style={{
       ...formControlStyle,
@@ -84,7 +84,7 @@ export const StyledTextarea = forwardRef((props, ref) => (
 export const StyledSelect = forwardRef((props, ref) => (
   <select
     ref={ref}
-    className="node-control"
+    className="nodrag node-control"
     {...props}
     style={{
       ...formControlStyle,
@@ -102,7 +102,7 @@ export const StyledLabel = ({ children, style }) => (
     gap: '6px',
     fontSize: '11px',
     fontWeight: 600,
-    color: '#64748B',
+    color: 'var(--text-secondary)',
     ...style,
   }}>
     {children}
@@ -121,11 +121,11 @@ const HoverableHandle = ({ id, style, ...handleProps }) => {
       style={{
         width: '12px',
         height: '12px',
-        background: isHovered ? '#1D4ED8' : '#2563EB',
-        border: '2px solid #ffffff',
+        background: isHovered ? 'var(--color-primary-hover)' : 'var(--color-primary)',
+        border: '2px solid var(--bg-cards-opaque)',
         boxShadow: isHovered
-          ? '0 0 0 3px rgba(37, 99, 235, 0.35), 0 0 8px rgba(37, 99, 235, 0.8), 0 2px 4px rgba(15, 23, 42, 0.15)'
-          : '0 2px 4px rgba(15, 23, 42, 0.15)',
+          ? '0 0 0 3px rgba(59, 130, 246, 0.35), 0 0 8px rgba(59, 130, 246, 0.8), 0 2px 4px var(--shadow-color)'
+          : '0 2px 4px var(--shadow-color)',
         transition: 'all 200ms cubic-bezier(0.4, 0, 0.2, 1)',
         cursor: 'pointer',
         zIndex: 20,
@@ -147,29 +147,29 @@ export const BaseNode = ({
   const [isHovered, setIsHovered] = useState(false);
 
   let borderStyle = selected 
-    ? '1.5px solid #2563EB' 
-    : (isHovered ? '1px solid #94A3B8' : '1px solid #CBD5E1');
+    ? '1.5px solid var(--color-primary)' 
+    : (isHovered ? '1px solid var(--text-secondary)' : '1px solid var(--border-color)');
     
   let shadowStyle = selected
-    ? '0 0 0 3px rgba(37, 99, 235, 0.25), 0 16px 40px rgba(15, 23, 42, 0.16)'
+    ? '0 0 0 3px rgba(59, 130, 246, 0.25), 0 16px 40px var(--shadow-hover)'
     : (isHovered 
-      ? '0 16px 40px rgba(15, 23, 42, 0.16)' 
-      : '0 12px 30px rgba(15, 23, 42, 0.12)');
+      ? '0 16px 40px var(--shadow-hover)' 
+      : '0 12px 30px var(--shadow-color)');
 
-  let backgroundStyle = isHovered ? 'rgba(255, 255, 255, 0.92)' : 'rgba(255, 255, 255, 0.75)';
+  let backgroundStyle = isHovered ? 'var(--bg-cards-hover)' : 'var(--bg-cards)';
 
   if (executionStatus === 'running') {
-    borderStyle = '2px solid #2563EB';
-    shadowStyle = '0 0 16px rgba(37, 99, 235, 0.55), 0 16px 40px rgba(15, 23, 42, 0.16)';
-    backgroundStyle = 'rgba(255, 255, 255, 0.98)';
+    borderStyle = '2px solid var(--color-primary)';
+    shadowStyle = '0 0 16px rgba(59, 130, 246, 0.55), 0 16px 40px var(--shadow-hover)';
+    backgroundStyle = 'var(--bg-cards-hover)';
   } else if (executionStatus === 'completed') {
-    borderStyle = '2px solid #10B981';
-    shadowStyle = '0 0 16px rgba(16, 185, 129, 0.55), 0 16px 40px rgba(15, 23, 42, 0.16)';
-    backgroundStyle = 'rgba(255, 255, 255, 0.98)';
+    borderStyle = '2px solid var(--color-success)';
+    shadowStyle = '0 0 16px rgba(34, 197, 94, 0.55), 0 16px 40px var(--shadow-hover)';
+    backgroundStyle = 'var(--bg-cards-hover)';
   } else if (executionStatus === 'failed') {
-    borderStyle = '2px solid #EF4444';
-    shadowStyle = '0 0 16px rgba(239, 68, 68, 0.55), 0 16px 40px rgba(15, 23, 42, 0.16)';
-    backgroundStyle = 'rgba(255, 255, 255, 0.98)';
+    borderStyle = '2px solid var(--color-error)';
+    shadowStyle = '0 0 16px rgba(239, 68, 68, 0.55), 0 16px 40px var(--shadow-hover)';
+    backgroundStyle = 'var(--bg-cards-hover)';
   }
 
   return (
@@ -191,7 +191,7 @@ export const BaseNode = ({
         boxSizing: 'border-box',
         fontFamily: 'inherit',
         fontSize: '13px',
-        color: '#1e293b',
+        color: 'var(--text-primary)',
         lineHeight: 1.4,
         width,
         minHeight,
@@ -218,14 +218,14 @@ export const BaseNode = ({
                 marginRight: handleProps.position === 'left' ? '8px' : '0',
                 fontSize: '10px',
                 fontWeight: 600,
-                color: '#64748B',
+                color: 'var(--text-secondary)',
                 pointerEvents: 'none',
                 whiteSpace: 'nowrap',
-                backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                border: '1px solid #CBD5E1',
+                backgroundColor: 'var(--bg-cards)',
+                border: '1px solid var(--border-color)',
                 borderRadius: '4px',
                 padding: '2px 6px',
-                boxShadow: '0 2px 4px rgba(15, 23, 42, 0.05)',
+                boxShadow: '0 2px 4px var(--shadow-color)',
                 backdropFilter: 'blur(4px)',
                 WebkitBackdropFilter: 'blur(4px)',
                 zIndex: 10,
@@ -243,10 +243,10 @@ export const BaseNode = ({
           fontWeight: 600,
           letterSpacing: '0.04em',
           textTransform: 'uppercase',
-          color: '#64748B',
+          color: 'var(--text-secondary)',
           marginBottom: '16px',
           paddingBottom: '8px',
-          borderBottom: '1px solid rgba(203, 213, 225, 0.5)',
+          borderBottom: '1px solid var(--border-color-subtle)',
         }}>
           {title}
         </div>

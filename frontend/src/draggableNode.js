@@ -152,13 +152,13 @@ export const DraggableNode = ({ type, label }) => {
         padding: '8px 14px',
         height: '38px',
         borderRadius: '10px',
-        background: isExecuting ? '#F1F5F9' : (isHovered ? accent.hoverBg : 'rgba(255, 255, 255, 0.75)'),
-        border: isExecuting ? '1px solid #E2E8F0' : (isHovered ? `1.5px solid ${accent.color}` : '1px solid #E2E8F0'),
-        color: isExecuting ? '#94A3B8' : (isHovered ? accent.color : '#334155'),
+        background: isExecuting ? 'var(--bg-inputs)' : (isHovered ? accent.hoverBg : 'var(--bg-cards)'),
+        border: isExecuting ? '1px solid var(--border-color)' : (isHovered ? `1.5px solid ${accent.color}` : '1px solid var(--border-color)'),
+        color: isExecuting ? 'var(--text-secondary)' : (isHovered ? accent.color : 'var(--text-primary)'),
         opacity: isExecuting ? 0.6 : 1,
         boxShadow: !isExecuting && isHovered
-          ? `0 6px 12px ${accent.glow}, 0 2px 4px rgba(15, 23, 42, 0.02)`
-          : '0 2px 4px rgba(15, 23, 42, 0.04)',
+          ? `0 6px 12px ${accent.glow}, 0 2px 4px var(--shadow-color)`
+          : '0 2px 4px var(--shadow-color)',
         transform: !isExecuting && isHovered ? 'translateY(-1px)' : 'none',
         transition: 'all 200ms cubic-bezier(0.4, 0, 0.2, 1)',
         fontFamily: 'inherit',
@@ -173,7 +173,7 @@ export const DraggableNode = ({ type, label }) => {
       <span style={{ 
         display: 'flex', 
         alignItems: 'center',
-        color: isExecuting ? '#CBD5E1' : (isHovered ? accent.color : '#64748B'),
+        color: isExecuting ? 'var(--border-color)' : (isHovered ? accent.color : 'var(--text-secondary)'),
         transition: 'color 200ms ease'
       }}>
         {nodeIcons[type] || null}

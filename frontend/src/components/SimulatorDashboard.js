@@ -24,6 +24,7 @@ export const SimulatorDashboard = () => {
     shallow
   );
 
+  const theme = useStore((state) => state.theme);
   const [isExpanded, setIsExpanded] = useState(true);
 
   if (executionStatus === 'idle') {
@@ -31,23 +32,38 @@ export const SimulatorDashboard = () => {
   }
 
   const statusColors = {
-    running: { bg: '#EFF6FF', border: '#BFDBFE', text: '#2563EB', label: 'Executing Simulation...' },
-    completed: { bg: '#ECFDF5', border: '#A7F3D0', text: '#059669', label: 'Simulation Finished' },
-    failed: { bg: '#FEF2F2', border: '#FCA5A5', text: '#DC2626', label: 'Simulation Failed' },
+    running: { 
+      bg: theme === 'dark' ? 'rgba(59, 130, 246, 0.12)' : '#EFF6FF', 
+      border: theme === 'dark' ? 'rgba(59, 130, 246, 0.3)' : '#BFDBFE', 
+      text: theme === 'dark' ? '#60a5fa' : '#2563EB', 
+      label: 'Executing Simulation...' 
+    },
+    completed: { 
+      bg: theme === 'dark' ? 'rgba(34, 197, 94, 0.12)' : '#ECFDF5', 
+      border: theme === 'dark' ? 'rgba(34, 197, 94, 0.3)' : '#A7F3D0', 
+      text: theme === 'dark' ? '#34d399' : '#059669', 
+      label: 'Simulation Finished' 
+    },
+    failed: { 
+      bg: theme === 'dark' ? 'rgba(239, 68, 68, 0.12)' : '#FEF2F2', 
+      border: theme === 'dark' ? 'rgba(239, 68, 68, 0.3)' : '#FCA5A5', 
+      text: theme === 'dark' ? '#f87171' : '#DC2626', 
+      label: 'Simulation Failed' 
+    },
   };
 
-  const status = statusColors[executionStatus] || { bg: '#F8FAFC', border: '#E2E8F0', text: '#64748B', label: 'Simulator Ready' };
+  const status = statusColors[executionStatus] || { bg: 'var(--bg-inputs)', border: 'var(--border-color)', text: 'var(--text-secondary)', label: 'Simulator Ready' };
 
   return (
     <div
       style={{
         margin: '0 24px 24px 24px',
-        background: 'rgba(255, 255, 255, 0.85)',
+        background: 'var(--bg-panels-glass)',
         backdropFilter: 'blur(12px)',
         WebkitBackdropFilter: 'blur(12px)',
-        border: '1px solid #E2E8F0',
+        border: '1px solid var(--border-color)',
         borderRadius: '16px',
-        boxShadow: '0 10px 30px rgba(15, 23, 42, 0.08)',
+        boxShadow: '0 10px 30px var(--shadow-color)',
         fontFamily: 'inherit',
         overflow: 'hidden',
         transition: 'all 250ms ease',
@@ -60,8 +76,8 @@ export const SimulatorDashboard = () => {
           justifyContent: 'space-between',
           alignItems: 'center',
           padding: '14px 20px',
-          borderBottom: '1px solid rgba(226, 232, 240, 0.8)',
-          background: 'rgba(248, 250, 252, 0.5)',
+          borderBottom: '1px solid var(--border-color-subtle)',
+          background: 'var(--bg-inputs)',
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -108,9 +124,9 @@ export const SimulatorDashboard = () => {
             style={{
               padding: '6px 12px',
               borderRadius: '8px',
-              border: '1px solid #E2E8F0',
-              background: '#ffffff',
-              color: '#475569',
+              border: '1px solid var(--border-color)',
+              background: 'var(--bg-cards-opaque)',
+              color: 'var(--text-primary)',
               fontSize: '12px',
               fontWeight: 600,
               cursor: 'pointer',
@@ -120,12 +136,12 @@ export const SimulatorDashboard = () => {
               transition: 'all 150ms ease',
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = '#F8FAFC';
-              e.currentTarget.style.borderColor = '#CBD5E1';
+              e.currentTarget.style.backgroundColor = 'var(--bg-cards-hover)';
+              e.currentTarget.style.borderColor = 'var(--color-primary)';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = '#ffffff';
-              e.currentTarget.style.borderColor = '#E2E8F0';
+              e.currentTarget.style.backgroundColor = 'var(--bg-cards-opaque)';
+              e.currentTarget.style.borderColor = 'var(--border-color)';
             }}
           >
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -141,7 +157,7 @@ export const SimulatorDashboard = () => {
             style={{
               background: 'none',
               border: 'none',
-              color: '#94A3B8',
+              color: 'var(--text-secondary)',
               cursor: 'pointer',
               padding: '4px',
               display: 'flex',
@@ -172,7 +188,7 @@ export const SimulatorDashboard = () => {
           <div
             style={{
               padding: '16px 20px',
-              borderRight: '1px solid rgba(226, 232, 240, 0.8)',
+              borderRight: '1px solid var(--border-color-subtle)',
               display: 'flex',
               flexDirection: 'column',
               overflow: 'hidden',
@@ -182,7 +198,7 @@ export const SimulatorDashboard = () => {
               style={{
                 fontSize: '11px',
                 fontWeight: 700,
-                color: '#64748B',
+                color: 'var(--text-secondary)',
                 textTransform: 'uppercase',
                 letterSpacing: '0.04em',
                 marginBottom: '10px',
@@ -203,13 +219,13 @@ export const SimulatorDashboard = () => {
             >
               {executionLogs.map((log, idx) => {
                 let icon = '●';
-                let color = '#3B82F6';
+                let color = 'var(--color-primary)';
                 if (log.type === 'success') {
                   icon = '✓';
-                  color = '#10B981';
+                  color = 'var(--color-success)';
                 } else if (log.type === 'error') {
                   icon = '✗';
-                  color = '#EF4444';
+                  color = 'var(--color-error)';
                 }
                 return (
                   <div
@@ -219,7 +235,7 @@ export const SimulatorDashboard = () => {
                       alignItems: 'flex-start',
                       gap: '8px',
                       fontSize: '12px',
-                      color: '#334155',
+                      color: 'var(--text-primary)',
                       lineHeight: '1.4',
                     }}
                   >
@@ -229,15 +245,15 @@ export const SimulatorDashboard = () => {
                 );
               })}
               {isExecuting && (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', color: '#64748B', fontStyle: 'italic' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', color: 'var(--text-secondary)', fontStyle: 'italic' }}>
                   <span className="sim-spinner" />
                   Running simulator steps...
                   <style>{`
                     .sim-spinner {
                       width: 10px;
                       height: 10px;
-                      border: 1.5px solid rgba(100, 116, 139, 0.2);
-                      border-top-color: #64748B;
+                      border: 1.5px solid var(--border-color-subtle);
+                      border-top-color: var(--text-secondary);
                       border-radius: 50%;
                       animation: sim-spin 0.8s linear infinite;
                     }
@@ -260,7 +276,7 @@ export const SimulatorDashboard = () => {
             <div
               style={{
                 padding: '16px 20px',
-                borderBottom: '1px solid rgba(226, 232, 240, 0.8)',
+                borderBottom: '1px solid var(--border-color-subtle)',
                 display: 'flex',
                 flexDirection: 'column',
                 overflow: 'hidden',
@@ -270,7 +286,7 @@ export const SimulatorDashboard = () => {
                 style={{
                   fontSize: '11px',
                   fontWeight: 700,
-                  color: '#64748B',
+                  color: 'var(--text-secondary)',
                   textTransform: 'uppercase',
                   letterSpacing: '0.04em',
                   marginBottom: '10px',
@@ -287,7 +303,7 @@ export const SimulatorDashboard = () => {
                 }}
               >
                 {Object.keys(executionContext).length === 0 ? (
-                  <div style={{ fontSize: '12px', color: '#94A3B8', fontStyle: 'italic', padding: '10px 0' }}>
+                  <div style={{ fontSize: '12px', color: 'var(--text-secondary)', fontStyle: 'italic', padding: '10px 0' }}>
                     No execution variables populated yet.
                   </div>
                 ) : (
@@ -298,14 +314,14 @@ export const SimulatorDashboard = () => {
                           ? JSON.stringify(val)
                           : String(val);
                         return (
-                          <tr key={key} style={{ borderBottom: '1px solid #F1F5F9' }}>
-                            <td style={{ padding: '6px 0', fontWeight: 600, color: '#475569', verticalAlign: 'top', width: '35%' }}>
+                          <tr key={key} style={{ borderBottom: '1px solid var(--border-color-subtle)' }}>
+                            <td style={{ padding: '6px 0', fontWeight: 600, color: 'var(--text-secondary)', verticalAlign: 'top', width: '35%' }}>
                               {key}
                             </td>
                             <td
                               style={{
                                 padding: '6px 0 6px 12px',
-                                color: '#0F172A',
+                                color: 'var(--text-primary)',
                                 fontFamily: 'monospace',
                                 wordBreak: 'break-all',
                                 whiteSpace: 'pre-wrap',
@@ -328,7 +344,7 @@ export const SimulatorDashboard = () => {
               <div
                 style={{
                   padding: '14px 20px',
-                  background: 'rgba(248, 250, 252, 0.6)',
+                  background: 'var(--bg-inputs)',
                   display: 'flex',
                   flexDirection: 'column',
                   gap: '8px',
@@ -338,7 +354,7 @@ export const SimulatorDashboard = () => {
                   style={{
                     fontSize: '10.5px',
                     fontWeight: 700,
-                    color: '#64748B',
+                    color: 'var(--text-secondary)',
                     textTransform: 'uppercase',
                     letterSpacing: '0.04em',
                   }}
@@ -347,16 +363,16 @@ export const SimulatorDashboard = () => {
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
                   <div style={{ display: 'flex', flexDirection: 'column' }}>
-                    <span style={{ fontSize: '10px', color: '#64748B' }}>Time Elapsed</span>
-                    <span style={{ fontSize: '13px', fontWeight: 600, color: '#0F172A' }}>{executionStats.duration} ms</span>
+                    <span style={{ fontSize: '10px', color: 'var(--text-secondary)' }}>Time Elapsed</span>
+                    <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)' }}>{executionStats.duration} ms</span>
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column' }}>
-                    <span style={{ fontSize: '10px', color: '#64748B' }}>Nodes Executed</span>
-                    <span style={{ fontSize: '13px', fontWeight: 600, color: '#0F172A' }}>{executionStats.nodeCount}</span>
+                    <span style={{ fontSize: '10px', color: 'var(--text-secondary)' }}>Nodes Executed</span>
+                    <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)' }}>{executionStats.nodeCount}</span>
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column' }}>
-                    <span style={{ fontSize: '10px', color: '#64748B' }}>API Queries</span>
-                    <span style={{ fontSize: '13px', fontWeight: 600, color: '#0F172A' }}>{executionStats.apiCallsCount}</span>
+                    <span style={{ fontSize: '10px', color: 'var(--text-secondary)' }}>API Queries</span>
+                    <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)' }}>{executionStats.apiCallsCount}</span>
                   </div>
                 </div>
               </div>

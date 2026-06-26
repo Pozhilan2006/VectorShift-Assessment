@@ -8,10 +8,17 @@ import {
     MarkerType,
   } from 'reactflow';
 
+// Initialize theme on DOM immediately to prevent flash
+const initialTheme = typeof window !== 'undefined' ? (localStorage.getItem('workflow-theme') || 'light') : 'light';
+if (typeof document !== 'undefined') {
+  document.documentElement.setAttribute('data-theme', initialTheme);
+}
+
 export const useStore = create((set, get) => ({
     nodes: [],
     edges: [],
     nodeIDs: {},
+    theme: initialTheme,
     
     // Execution Simulation States
     isExecuting: false,
@@ -20,6 +27,14 @@ export const useStore = create((set, get) => ({
     executionLogs: [],       // [ { message, type, timestamp } ]
     executionContext: {},    // { [variableName]: value }
     executionStats: null,    // { duration, nodeCount, variablesCount, apiCallsCount, dbOpsCount, success }
+
+    setTheme: (newTheme) => {
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('workflow-theme', newTheme);
+        document.documentElement.setAttribute('data-theme', newTheme);
+      }
+      set({ theme: newTheme });
+    },
 
     getNodeID: (type) => {
         const newIDs = {...get().nodeIDs};
@@ -36,8 +51,16 @@ export const useStore = create((set, get) => ({
         });
     },
     onNodesChange: (changes) => {
+      const removedIds = changes.filter(c => c.type === 'remove').map(c => c.id);
+      let updatedEdges = get().edges;
+      if (removedIds.length > 0) {
+        updatedEdges = updatedEdges.filter(
+          (edge) => !removedIds.includes(edge.source) && !removedIds.includes(edge.target)
+        );
+      }
       set({
         nodes: applyNodeChanges(changes, get().nodes),
+        edges: updatedEdges,
       });
     },
     onEdgesChange: (changes) => {
@@ -63,6 +86,21 @@ export const useStore = create((set, get) => ({
           }
         }, get().edges),
       });
+    },
+    removeNodeAndEdges: (nodeId) => {
+      set({
+        nodes: get().nodes.filter(n => n.id !== nodeId),
+        edges: get().edges.filter(e => e.source !== nodeId && e.target !== nodeId),
+      });
+    },
+    removeSelectedNodes: () => {
+      const selectedNodeIds = get().nodes.filter(n => n.selected).map(n => n.id);
+      if (selectedNodeIds.length > 0) {
+        set({
+          nodes: get().nodes.filter(n => !selectedNodeIds.includes(n.id)),
+          edges: get().edges.filter(e => !selectedNodeIds.includes(e.source) && !selectedNodeIds.includes(e.target)),
+        });
+      }
     },
     updateNodeField: (nodeId, fieldName, fieldValue) => {
       set({
