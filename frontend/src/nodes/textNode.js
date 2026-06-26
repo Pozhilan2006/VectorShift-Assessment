@@ -3,10 +3,29 @@ import { Position, useUpdateNodeInternals } from 'reactflow';
 import { BaseNode, StyledLabel, StyledTextarea } from './BaseNode';
 import { useStore } from '../store';
 
-// Regex to capture anything inside {{ }} as a variable name
-const VARIABLE_REGEX = /\{\{\s*(\w+)\s*\}\}/g;
-const TEXTAREA_MIN_HEIGHT = 72;
-const TEXTAREA_MAX_HEIGHT = 300;
+// Check if a string is a valid JavaScript variable identifier
+export const isValidVariable = (name) => {
+  return /^[A-Za-z_$][A-Za-z0-9_$]*$/.test(name);
+};
+
+// Extract unique valid variable names from text
+export const extractVariables = (text) => {
+  const seen = new Set();
+  const variables = [];
+  
+  // Find all matches for {{...}}
+  const regex = /\{\{\s*([^}]+)\s*\}\}/g;
+  let match;
+  while ((match = regex.exec(text)) !== null) {
+    const rawName = match[1].trim();
+    if (isValidVariable(rawName) && !seen.has(rawName)) {
+      seen.add(rawName);
+      variables.push(rawName);
+    }
+  }
+  
+  return variables;
+};
 
 // CSS keyframes for entering chips
 const chipStyleSheet = `
@@ -25,22 +44,6 @@ const chipStyleSheet = `
 }
 `;
 
-// Helper to extract unique variables
-const extractUniqueVariables = (text) => {
-  const seen = new Set();
-  const variables = [];
-
-  for (const match of text.matchAll(VARIABLE_REGEX)) {
-    const name = match[1];
-    if (!seen.has(name)) {
-      seen.add(name);
-      variables.push(name);
-    }
-  }
-
-  return variables;
-};
-
 export const TextNode = ({ id, data, selected }) => {
   const [currText, setCurrText] = useState(data?.text || '{{input}}');
   const textareaRef = useRef(null);
@@ -56,27 +59,29 @@ export const TextNode = ({ id, data, selected }) => {
 
   // Extract variables, memoized to only recalculate on text change
   const variables = useMemo(
-    () => extractUniqueVariables(currText),
+    () => extractVariables(currText),
     [currText]
   );
 
   // Calculate dynamic handles based on extracted variables
   const handles = useMemo(() => {
-    // Generate evenly spaced handles vertically for each variable
-    const variableHandles = variables.map((name, index) => ({
-      type: 'target',
-      position: Position.Left,
-      id: `${id}-var-${name}`,
-      label: name,
-      style: {
-        // Distribute evenly between 0 and 100%
-        top: `${((index + 1) / (variables.length + 1)) * 100}%`,
-      },
-    }));
+    const variableHandles = variables.map((name, index) => {
+      // Calculate a fixed top position based on index, e.g. 52px for header, then 32px per handle
+      const topOffset = 52 + (index * 32);
+      return {
+        type: 'target',
+        position: Position.Left,
+        id: `${id}-${name}`,
+        label: name,
+        style: {
+          top: `${topOffset}px`,
+        },
+      };
+    });
 
     return [
       ...variableHandles,
-      // Keep the existing output handle
+      // Keep the existing source output handle on the right
       { type: 'source', position: Position.Right, id: `${id}-output` },
     ];
   }, [id, variables]);
@@ -90,12 +95,12 @@ export const TextNode = ({ id, data, selected }) => {
     
     // Auto-grow height based on scrollHeight, capped at max height
     const scrollHeight = textarea.scrollHeight;
-    const newHeight = Math.min(TEXTAREA_MAX_HEIGHT, Math.max(TEXTAREA_MIN_HEIGHT, scrollHeight));
+    const newHeight = Math.min(300, Math.max(72, scrollHeight));
     
     textarea.style.height = `${newHeight}px`;
     
     // Enable scrollbar if it exceeds the maximum height
-    textarea.style.overflowY = scrollHeight > TEXTAREA_MAX_HEIGHT ? 'auto' : 'hidden';
+    textarea.style.overflowY = scrollHeight > 300 ? 'auto' : 'hidden';
   }, []);
 
   // Update ReactFlow node internals to recalculate handle positions whenever they change
@@ -104,9 +109,10 @@ export const TextNode = ({ id, data, selected }) => {
     updateNodeInternals(id);
   }, [currText, variables, id, syncTextareaHeight, updateNodeInternals]);
 
-  // Dynamically increase minHeight as variables grow to allow space for the handles, starting at 90px
+  // Dynamically increase minHeight as variables grow to allow space for handles,
+  // starting at 90px minimum, and ensuring at least 52 + variables.length * 32
   const minHeight = useMemo(
-    () => Math.max(90, 80 + variables.length * 20),
+    () => Math.max(90, 52 + variables.length * 32),
     [variables.length]
   );
 
@@ -119,7 +125,7 @@ export const TextNode = ({ id, data, selected }) => {
   return (
     <BaseNode
       title="Text"
-      width={240}
+      width={250}
       minHeight={minHeight}
       handles={handles}
       selected={selected}
@@ -142,7 +148,7 @@ export const TextNode = ({ id, data, selected }) => {
       {variables.length > 0 && (
         <div style={{ marginTop: '4px' }}>
           <style>{chipStyleSheet}</style>
-          <div style={{ fontSize: '10px', fontWeight: 600, color: '#64748B', marginBottom: '6px' }}>
+          <div style={{ fontSize: '10px', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '6px' }}>
             Detected Variables
           </div>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
@@ -157,7 +163,7 @@ export const TextNode = ({ id, data, selected }) => {
                   borderRadius: '6px',
                   backgroundColor: 'rgba(37, 99, 235, 0.08)',
                   border: '1px solid rgba(37, 99, 235, 0.2)',
-                  color: '#2563EB',
+                  color: 'var(--color-primary)',
                   fontSize: '11px',
                   fontWeight: 600,
                   pointerEvents: 'none',
