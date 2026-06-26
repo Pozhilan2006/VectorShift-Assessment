@@ -78,8 +78,8 @@ Assessment/
 ### Setup
 Clone the repository to your local machine:
 ```bash
-git clone https://github.com/pozhilan-dev/vectorshift-assessment.git
-cd vectorshift-assessment
+git clone https://github.com/pozhilan-dev/VectorShift-Assessment.git
+cd VectorShift-Assessment
 ```
 
 ---
@@ -175,28 +175,3 @@ A typical configuration involves:
 * **Backend Validation**: Keeps graph validation logic separated from presentation concerns. This allows validation rules to be written in Python and reused across multiple client implementations without duplicating logic.
 
 ---
-
-## Future Improvements
-
-* **Sub-graph Grouping**: Support selecting multiple nodes and grouping them into nested processes.
-* **Database Connection Pools**: Mock actual query outputs inside the backend database validation path.
-* **Dynamic Node Registration**: Define schemas on the backend and let the frontend dynamically render configuration controls.
-
----
-
-## Screenshots
-
-* **Pipeline Workspace**
-  ![Pipeline Workspace](docs/images/workflow.png)
-
-* **Validation Modal**
-  ![Validation Engine Results](docs/images/validation.png)
-
----
-
-## Author
-
-**Pozhilan**  
-B.Sc Artificial Intelligence & Machine Learning  
-* [LinkedIn](https://www.linkedin.com/in/pozhilan-k/)  
-* [GitHub](https://github.com/pozhilan-dev)  
