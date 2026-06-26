@@ -123,6 +123,7 @@ export const TextNode = ({ id, data, selected }) => {
       minHeight={minHeight}
       handles={handles}
       selected={selected}
+      executionStatus={data?.executionStatus}
     >
       <StyledLabel>
         Template

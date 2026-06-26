@@ -34,6 +34,7 @@ export const OutputNode = ({ id, data, selected }) => {
     <BaseNode
       title="Output"
       selected={selected}
+      executionStatus={data?.executionStatus}
       handles={[
         { type: 'target', position: Position.Left, id: `${id}-value` },
       ]}

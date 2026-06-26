@@ -142,8 +142,35 @@ export const BaseNode = ({
   width = 240,
   minHeight = 80,
   selected = false,
+  executionStatus = undefined,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
+
+  let borderStyle = selected 
+    ? '1.5px solid #2563EB' 
+    : (isHovered ? '1px solid #94A3B8' : '1px solid #CBD5E1');
+    
+  let shadowStyle = selected
+    ? '0 0 0 3px rgba(37, 99, 235, 0.25), 0 16px 40px rgba(15, 23, 42, 0.16)'
+    : (isHovered 
+      ? '0 16px 40px rgba(15, 23, 42, 0.16)' 
+      : '0 12px 30px rgba(15, 23, 42, 0.12)');
+
+  let backgroundStyle = isHovered ? 'rgba(255, 255, 255, 0.92)' : 'rgba(255, 255, 255, 0.75)';
+
+  if (executionStatus === 'running') {
+    borderStyle = '2px solid #2563EB';
+    shadowStyle = '0 0 16px rgba(37, 99, 235, 0.55), 0 16px 40px rgba(15, 23, 42, 0.16)';
+    backgroundStyle = 'rgba(255, 255, 255, 0.98)';
+  } else if (executionStatus === 'completed') {
+    borderStyle = '2px solid #10B981';
+    shadowStyle = '0 0 16px rgba(16, 185, 129, 0.55), 0 16px 40px rgba(15, 23, 42, 0.16)';
+    backgroundStyle = 'rgba(255, 255, 255, 0.98)';
+  } else if (executionStatus === 'failed') {
+    borderStyle = '2px solid #EF4444';
+    shadowStyle = '0 0 16px rgba(239, 68, 68, 0.55), 0 16px 40px rgba(15, 23, 42, 0.16)';
+    backgroundStyle = 'rgba(255, 255, 255, 0.98)';
+  }
 
   return (
     <div
@@ -152,16 +179,10 @@ export const BaseNode = ({
       role="region"
       aria-label={`${title || 'Workflow'} Node`}
       style={{
-        background: isHovered ? 'rgba(255, 255, 255, 0.92)' : 'rgba(255, 255, 255, 0.75)',
-        border: selected 
-          ? '1.5px solid #2563EB' 
-          : (isHovered ? '1px solid #94A3B8' : '1px solid #CBD5E1'),
+        background: backgroundStyle,
+        border: borderStyle,
         borderRadius: '14px',
-        boxShadow: selected
-          ? '0 0 0 3px rgba(37, 99, 235, 0.25), 0 16px 40px rgba(15, 23, 42, 0.16)'
-          : (isHovered 
-            ? '0 16px 40px rgba(15, 23, 42, 0.16)' 
-            : '0 12px 30px rgba(15, 23, 42, 0.12)'),
+        boxShadow: shadowStyle,
         transform: isHovered ? 'translateY(-2px)' : 'none',
         transition: 'all 180ms cubic-bezier(0.4, 0, 0.2, 1)',
         backdropFilter: 'blur(8px)',

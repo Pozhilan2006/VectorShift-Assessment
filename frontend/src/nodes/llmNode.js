@@ -1,11 +1,12 @@
 import { Position } from 'reactflow';
 import { BaseNode } from './BaseNode';
 
-export const LLMNode = ({ id, selected }) => {
+export const LLMNode = ({ id, data, selected }) => {
   return (
     <BaseNode
       title="LLM"
       selected={selected}
+      executionStatus={data?.executionStatus}
       minHeight={100}
       handles={[
         { type: 'target', position: Position.Left, id: `${id}-system`, style: { top: `${100 / 3}%` } },

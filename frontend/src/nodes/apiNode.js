@@ -34,6 +34,7 @@ export const ApiNode = ({ id, data, selected }) => {
     <BaseNode
       title="API"
       selected={selected}
+      executionStatus={data?.executionStatus}
       handles={[
         { type: 'target', position: Position.Left, id: `${id}-input` },
         { type: 'source', position: Position.Right, id: `${id}-output` },

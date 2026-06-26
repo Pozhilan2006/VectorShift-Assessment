@@ -24,6 +24,7 @@ export const TransformNode = ({ id, data, selected }) => {
     <BaseNode
       title="Transform"
       selected={selected}
+      executionStatus={data?.executionStatus}
       handles={[
         { type: 'target', position: Position.Left, id: `${id}-input` },
         { type: 'source', position: Position.Right, id: `${id}-output` },
@@ -35,7 +36,10 @@ export const TransformNode = ({ id, data, selected }) => {
           <option value="Uppercase">Uppercase</option>
           <option value="Lowercase">Lowercase</option>
           <option value="Trim">Trim</option>
-          <option value="JSON Parse">JSON Parse</option>
+          <option value="Reverse">Reverse</option>
+          <option value="Capitalize">Capitalize</option>
+          <option value="JSON Pretty Print">JSON Pretty Print</option>
+          <option value="Remove Extra Spaces">Remove Extra Spaces</option>
         </StyledSelect>
       </StyledLabel>
     </BaseNode>

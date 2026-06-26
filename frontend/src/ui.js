@@ -190,9 +190,12 @@ export const PipelineUI = () => {
       return nodeData;
     }
 
+    const isExecuting = useStore((state) => state.isExecuting);
+
     const onDrop = useCallback(
         (event) => {
           event.preventDefault();
+          if (isExecuting) return;
     
           const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
           if (event?.dataTransfer?.getData('application/reactflow')) {
@@ -220,13 +223,17 @@ export const PipelineUI = () => {
             addNode(newNode);
           }
         },
-        [reactFlowInstance]
+        [reactFlowInstance, isExecuting, addNode, getNodeID]
     );
 
     const onDragOver = useCallback((event) => {
         event.preventDefault();
-        event.dataTransfer.dropEffect = 'move';
-    }, []);
+        if (isExecuting) {
+          event.dataTransfer.dropEffect = 'none';
+        } else {
+          event.dataTransfer.dropEffect = 'move';
+        }
+    }, [isExecuting]);
 
     return (
         <>
@@ -310,7 +317,7 @@ export const PipelineUI = () => {
                   </svg>
                   <div>
                     <h3 style={{ margin: '0 0 6px', fontSize: '15px', fontWeight: 600, color: '#475569' }}>
-                      Build your workflow
+                       Build your workflow
                     </h3>
                     <p style={{ margin: 0, fontSize: '12.5px', lineHeight: 1.45, color: '#64748B' }}>
                       Drag nodes from the toolbar to begin creating a pipeline.
@@ -338,6 +345,9 @@ export const PipelineUI = () => {
                 connectionLineType='smoothstep'
                 connectionLineStyle={connectionLineStyle}
                 defaultEdgeOptions={defaultEdgeOptions}
+                nodesDraggable={!isExecuting}
+                nodesConnectable={!isExecuting}
+                elementsSelectable={!isExecuting}
             >
                 <Background color="#CBD5E1" gap={gridSize} size={1.5} /> {/* Lighter dots */}
                 <Controls style={controlsStyle} /> {/* Rounded controls */}

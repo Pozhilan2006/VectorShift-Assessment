@@ -34,6 +34,7 @@ export const DatabaseNode = ({ id, data, selected }) => {
     <BaseNode
       title="Database"
       selected={selected}
+      executionStatus={data?.executionStatus}
       handles={[
         { type: 'target', position: Position.Left, id: `${id}-input` },
         { type: 'source', position: Position.Right, id: `${id}-output` },

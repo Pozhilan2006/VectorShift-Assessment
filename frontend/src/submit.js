@@ -4,6 +4,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import { shallow } from 'zustand/shallow';
 import { useStore } from './store';
+import { runPipelineSimulation } from './engine/executor';
 
 const API_URL = 'http://localhost:8000/pipelines/parse';
 
@@ -132,7 +133,6 @@ const ResultModal = ({ result, error, onClose }) => {
 
   const warnings = checks.filter(c => c.type === 'warning' || c.severity === 'warning');
   
-  const hasPathError = checks.some(c => (c.type === 'error' || c.severity === 'error') && (c.message.includes('path') || c.message.includes('unreachable')));
   const hasFieldsError = checks.some(c => (c.type === 'error' || c.severity === 'error') && c.message.includes('missing'));
   const hasVariablesError = checks.some(c => (c.type === 'error' || c.severity === 'error') && (c.message.includes('variable') || c.message.includes('Variable')));
 
@@ -469,14 +469,19 @@ const ResultModal = ({ result, error, onClose }) => {
 };
 
 export const SubmitButton = () => {
-  const { nodes, edges } = useStore(
-    (state) => ({ nodes: state.nodes, edges: state.edges }),
+  const { nodes, edges, isExecuting } = useStore(
+    (state) => ({ 
+      nodes: state.nodes, 
+      edges: state.edges,
+      isExecuting: state.isExecuting
+    }),
     shallow
   );
 
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
+  const [isSubmitHovered, setIsSubmitHovered] = useState(false);
+  const [isRunHovered, setIsRunHovered] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
 
@@ -507,6 +512,7 @@ export const SubmitButton = () => {
   };
 
   const handleSubmit = async () => {
+    if (isExecuting || isLoading) return;
     setIsLoading(true);
     setResult(null);
     setError(null);
@@ -519,6 +525,38 @@ export const SubmitButton = () => {
     } finally {
       setIsLoading(false);
       setIsOpen(true);
+    }
+  };
+
+  const handleRunSimulation = async () => {
+    if (isExecuting || isLoading) return;
+    setIsLoading(true);
+    setError(null);
+    setResult(null);
+
+    try {
+      // 1. Run backend parsing validation first
+      const response = await axios.post(API_URL, { nodes, edges });
+      const valResult = response.data;
+      
+      const hasErrors = valResult?.checks?.some(c => c.type === 'error' || c.severity === 'error') || !valResult?.summary?.ready;
+      
+      if (hasErrors) {
+        // Validation failed, show modal and abort execution
+        setResult(valResult);
+        setIsOpen(true);
+        return;
+      }
+      
+      // 2. No validation errors - trigger simulation execution
+      const store = useStore.getState();
+      await runPipelineSimulation(store);
+      
+    } catch (err) {
+      setError(getErrorMessage(err));
+      setIsOpen(true); // Open modal with network/server details
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -536,9 +574,44 @@ export const SubmitButton = () => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
+          gap: '16px',
           padding: '24px',
         }}
       >
+        {/* Submit Pipeline Button */}
+        <button
+          type="button"
+          className="tactile-btn"
+          style={{
+            padding: '12px 28px',
+            borderRadius: '10px',
+            border: '1px solid #CBD5E1',
+            backgroundColor: isExecuting ? '#F8FAFC' : (isSubmitHovered ? '#F1F5F9' : '#ffffff'),
+            color: isExecuting ? '#94A3B8' : '#334155',
+            fontSize: '14px',
+            fontWeight: 600,
+            cursor: (isLoading || isExecuting) ? 'not-allowed' : 'pointer',
+            boxShadow: !isExecuting && isSubmitHovered 
+              ? '0 4px 12px rgba(15, 23, 42, 0.05)' 
+              : '0 2px 4px rgba(15, 23, 42, 0.02)',
+            transform: !isExecuting && isSubmitHovered && !isLoading ? 'translateY(-1px)' : 'none',
+            transition: 'all 150ms cubic-bezier(0.4, 0, 0.2, 1)',
+            outline: 'none',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            opacity: isExecuting ? 0.6 : 1,
+          }}
+          onMouseEnter={() => !isExecuting && setIsSubmitHovered(true)}
+          onMouseLeave={() => setIsSubmitHovered(false)}
+          onClick={handleSubmit}
+          disabled={isLoading || isExecuting}
+        >
+          {isLoading && !isExecuting && <Spinner />}
+          {isLoading && !isExecuting ? 'Validating...' : 'Submit Pipeline'}
+        </button>
+
+        {/* Run Simulation Button */}
         <button
           type="button"
           className="tactile-btn"
@@ -546,28 +619,49 @@ export const SubmitButton = () => {
             padding: '12px 28px',
             borderRadius: '10px',
             border: 'none',
-            backgroundColor: isLoading ? '#1D4ED8' : (isHovered ? '#1D4ED8' : '#2563EB'),
+            backgroundColor: isExecuting ? '#10B981' : (isRunHovered ? '#1D4ED8' : '#2563EB'),
             color: '#ffffff',
             fontSize: '14px',
             fontWeight: 600,
-            cursor: isLoading ? 'not-allowed' : 'pointer',
-            boxShadow: isHovered 
+            cursor: (isLoading || isExecuting) ? 'not-allowed' : 'pointer',
+            boxShadow: isRunHovered && !isExecuting
               ? '0 6px 20px rgba(37, 99, 235, 0.3)' 
               : '0 4px 12px rgba(37, 99, 235, 0.2)',
-            transform: isHovered && !isLoading ? 'translateY(-1px)' : 'none',
+            transform: isRunHovered && !isExecuting && !isLoading ? 'translateY(-1px)' : 'none',
             transition: 'all 150ms cubic-bezier(0.4, 0, 0.2, 1)',
             outline: 'none',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
+            gap: '8px',
           }}
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
-          onClick={handleSubmit}
-          disabled={isLoading}
+          onMouseEnter={() => !isExecuting && setIsRunHovered(true)}
+          onMouseLeave={() => setIsRunHovered(false)}
+          onClick={handleRunSimulation}
+          disabled={isLoading || isExecuting}
         >
-          {isLoading && <Spinner />}
-          {isLoading ? 'Submitting...' : 'Submit Pipeline'}
+          {isExecuting ? (
+            <>
+              <svg 
+                style={{ animation: 'spin 1s linear infinite' }} 
+                width="16" 
+                height="16" 
+                viewBox="0 0 24 24" 
+                fill="none"
+              >
+                <circle cx="12" cy="12" r="10" stroke="rgba(255, 255, 255, 0.25)" strokeWidth="3" />
+                <path d="M12 2a10 10 0 0 1 10 10" stroke="#ffffff" strokeWidth="3" strokeLinecap="round" />
+              </svg>
+              <span>Simulating...</span>
+            </>
+          ) : (
+            <>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style={{ verticalAlign: 'middle' }}>
+                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+              </svg>
+              <span>Run Pipeline</span>
+            </>
+          )}
         </button>
       </div>
 

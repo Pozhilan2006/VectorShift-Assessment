@@ -26,7 +26,7 @@ export const PromptNode = ({ id, data, selected }) => {
 
   const handleTemperatureChange = (e) => {
     const value = parseFloat(e.target.value) || 0;
-    setTemplate(value);
+    setTemperature(value);
     updateNodeField(id, 'temperature', value);
   };
 
@@ -34,6 +34,7 @@ export const PromptNode = ({ id, data, selected }) => {
     <BaseNode
       title="Prompt"
       selected={selected}
+      executionStatus={data?.executionStatus}
       handles={[
         { type: 'target', position: Position.Left, id: `${id}-input` },
         { type: 'source', position: Position.Right, id: `${id}-output` },

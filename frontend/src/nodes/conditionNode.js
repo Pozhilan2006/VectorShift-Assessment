@@ -34,6 +34,7 @@ export const ConditionNode = ({ id, data, selected }) => {
     <BaseNode
       title="Condition"
       selected={selected}
+      executionStatus={data?.executionStatus}
       minHeight={100}
       handles={[
         { type: 'target', position: Position.Left, id: `${id}-input` },

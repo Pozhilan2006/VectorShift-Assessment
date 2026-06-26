@@ -1,6 +1,5 @@
-// draggableNode.js
-
 import React, { useState } from 'react';
+import { useStore } from './store';
 
 const nodeIcons = {
   customInput: (
@@ -40,7 +39,7 @@ const nodeIcons = {
   condition: (
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <circle cx="12" cy="12" r="3"></circle>
-      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
     </svg>
   ),
   api: (
@@ -117,9 +116,12 @@ const accentColors = {
 
 export const DraggableNode = ({ type, label }) => {
   const [isHovered, setIsHovered] = useState(false);
+  const isExecuting = useStore((state) => state.isExecuting);
+  
   const accent = accentColors[type] || { color: '#3b82f6', hoverBg: 'rgba(59, 130, 246, 0.08)', glow: 'rgba(59, 130, 246, 0.15)' };
 
   const onDragStart = (event, nodeType) => {
+    if (isExecuting) return;
     const appData = { nodeType };
     event.target.style.cursor = 'grabbing';
     event.dataTransfer.setData('application/reactflow', JSON.stringify(appData));
@@ -130,10 +132,10 @@ export const DraggableNode = ({ type, label }) => {
     <div
       className={`${type} tactile-btn`}
       onDragStart={(event) => onDragStart(event, type)}
-      onDragEnd={(event) => (event.target.style.cursor = 'grab')}
+      onDragEnd={(event) => (event.target.style.cursor = isExecuting ? 'not-allowed' : 'grab')}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      tabIndex={0}
+      tabIndex={isExecuting ? -1 : 0}
       role="button"
       aria-label={`Drag to add ${label} node`}
       onKeyDown={(e) => {
@@ -142,7 +144,7 @@ export const DraggableNode = ({ type, label }) => {
         }
       }}
       style={{
-        cursor: 'grab',
+        cursor: isExecuting ? 'not-allowed' : 'grab',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -150,13 +152,14 @@ export const DraggableNode = ({ type, label }) => {
         padding: '8px 14px',
         height: '38px',
         borderRadius: '10px',
-        background: isHovered ? accent.hoverBg : 'rgba(255, 255, 255, 0.75)',
-        border: isHovered ? `1.5px solid ${accent.color}` : '1px solid #E2E8F0',
-        color: isHovered ? accent.color : '#334155',
-        boxShadow: isHovered
+        background: isExecuting ? '#F1F5F9' : (isHovered ? accent.hoverBg : 'rgba(255, 255, 255, 0.75)'),
+        border: isExecuting ? '1px solid #E2E8F0' : (isHovered ? `1.5px solid ${accent.color}` : '1px solid #E2E8F0'),
+        color: isExecuting ? '#94A3B8' : (isHovered ? accent.color : '#334155'),
+        opacity: isExecuting ? 0.6 : 1,
+        boxShadow: !isExecuting && isHovered
           ? `0 6px 12px ${accent.glow}, 0 2px 4px rgba(15, 23, 42, 0.02)`
           : '0 2px 4px rgba(15, 23, 42, 0.04)',
-        transform: isHovered ? 'translateY(-1px)' : 'none',
+        transform: !isExecuting && isHovered ? 'translateY(-1px)' : 'none',
         transition: 'all 200ms cubic-bezier(0.4, 0, 0.2, 1)',
         fontFamily: 'inherit',
         fontSize: '13px',
@@ -165,12 +168,12 @@ export const DraggableNode = ({ type, label }) => {
         boxSizing: 'border-box',
         outline: 'none',
       }}
-      draggable
+      draggable={!isExecuting}
     >
       <span style={{ 
         display: 'flex', 
         alignItems: 'center',
-        color: isHovered ? accent.color : '#64748B',
+        color: isExecuting ? '#CBD5E1' : (isHovered ? accent.color : '#64748B'),
         transition: 'color 200ms ease'
       }}>
         {nodeIcons[type] || null}
