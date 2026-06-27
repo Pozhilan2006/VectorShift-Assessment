@@ -14,7 +14,7 @@ export const LLMNode = ({ id, data, selected }) => {
         { type: 'source', position: Position.Right, id: `${id}-response` },
       ]}
     >
-      <div style={{ color: '#64748B', fontSize: '13px' }}>
+      <div style={{ color: 'var(--text-secondary)', fontSize: '13px' }}>
         This is a LLM.
       </div>
     </BaseNode>

@@ -162,8 +162,8 @@ const ResultModal = ({ result, error, onClose }) => {
         style={{
           background: 'var(--bg-panels-opaque)',
           border: '1px solid var(--border-color)',
-          borderRadius: '14px',
-          boxShadow: '0 20px 50px var(--shadow-color)',
+          borderRadius: '12px',
+          boxShadow: '0 12px 30px var(--shadow-color)',
           width: 'min(720px, 92vw)',
           maxHeight: '90vh',
           boxSizing: 'border-box',
@@ -584,11 +584,24 @@ export const SubmitButton = () => {
       <style>{modalStyles}</style>
       <div
         style={{
+          position: 'absolute',
+          bottom: '24px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          zIndex: 100,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          gap: '16px',
-          padding: '24px',
+          gap: '12px',
+          padding: '6px 12px',
+          borderRadius: '12px',
+          border: '1px solid var(--border-color)',
+          backgroundColor: 'var(--bg-panels-glass)',
+          backdropFilter: 'blur(8px)',
+          WebkitBackdropFilter: 'blur(8px)',
+          boxShadow: '0 4px 20px var(--shadow-color)',
+          pointerEvents: 'auto',
+          transition: 'all 200ms ease'
         }}
       >
         {/* Submit Pipeline Button */}
@@ -596,19 +609,18 @@ export const SubmitButton = () => {
           type="button"
           className="tactile-btn"
           style={{
-            padding: '12px 28px',
-            borderRadius: '10px',
+            padding: '10px 20px',
+            borderRadius: '8px',
             border: '1px solid var(--border-color)',
             backgroundColor: isExecuting ? 'var(--bg-inputs)' : (isSubmitHovered ? 'var(--bg-inputs-hover)' : 'var(--bg-cards)'),
             color: isExecuting ? 'var(--text-secondary)' : 'var(--text-primary)',
-            fontSize: '14px',
+            fontSize: '13px',
             fontWeight: 600,
             cursor: (isLoading || isExecuting) ? 'not-allowed' : 'pointer',
             boxShadow: !isExecuting && isSubmitHovered 
-              ? '0 4px 12px var(--shadow-hover)' 
-              : '0 2px 4px var(--shadow-color)',
-            transform: !isExecuting && isSubmitHovered && !isLoading ? 'translateY(-1px)' : 'none',
-            transition: 'all 150ms cubic-bezier(0.4, 0, 0.2, 1)',
+              ? '0 2px 8px var(--shadow-hover)' 
+              : '0 1px 2px var(--shadow-color)',
+            transition: 'all 150ms ease',
             outline: 'none',
             display: 'flex',
             alignItems: 'center',
@@ -629,19 +641,18 @@ export const SubmitButton = () => {
           type="button"
           className="tactile-btn"
           style={{
-            padding: '12px 28px',
-            borderRadius: '10px',
+            padding: '10px 20px',
+            borderRadius: '8px',
             border: 'none',
             backgroundColor: isExecuting ? 'var(--color-success)' : (isRunHovered ? 'var(--color-primary-hover)' : 'var(--color-primary)'),
             color: '#ffffff',
-            fontSize: '14px',
+            fontSize: '13px',
             fontWeight: 600,
             cursor: (isLoading || isExecuting) ? 'not-allowed' : 'pointer',
             boxShadow: isRunHovered && !isExecuting
-              ? '0 6px 20px rgba(59, 130, 246, 0.3)' 
-              : '0 4px 12px rgba(59, 130, 246, 0.2)',
-            transform: isRunHovered && !isExecuting && !isLoading ? 'translateY(-1px)' : 'none',
-            transition: 'all 150ms cubic-bezier(0.4, 0, 0.2, 1)',
+              ? '0 2px 8px rgba(37, 99, 235, 0.25)' 
+              : '0 1px 2px rgba(37, 99, 235, 0.15)',
+            transition: 'all 150ms ease',
             outline: 'none',
             display: 'flex',
             alignItems: 'center',
@@ -657,8 +668,8 @@ export const SubmitButton = () => {
             <>
               <svg 
                 style={{ animation: 'spin 1s linear infinite' }} 
-                width="16" 
-                height="16" 
+                width="14" 
+                height="14" 
                 viewBox="0 0 24 24" 
                 fill="none"
               >
@@ -669,7 +680,7 @@ export const SubmitButton = () => {
             </>
           ) : (
             <>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style={{ verticalAlign: 'middle' }}>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" style={{ verticalAlign: 'middle' }}>
                 <polygon points="5 3 19 12 5 21 5 3"></polygon>
               </svg>
               <span>Run Pipeline</span>

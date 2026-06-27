@@ -18,14 +18,18 @@ function App() {
     <div style={{
       display: 'flex',
       flexDirection: 'column',
-      minHeight: '100vh',
+      height: '100vh',
       backgroundColor: 'var(--bg-app)',
       color: 'var(--text-primary)',
-      transition: 'background-color 200ms ease, color 200ms ease'
+      transition: 'background-color 200ms ease, color 200ms ease',
+      overflow: 'hidden',
+      position: 'relative'
     }}>
       <PipelineToolbar />
-      <PipelineUI />
-      <SubmitButton />
+      <div style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
+        <PipelineUI />
+        <SubmitButton />
+      </div>
       <SimulatorDashboard />
       <CursorFollower />
     </div>

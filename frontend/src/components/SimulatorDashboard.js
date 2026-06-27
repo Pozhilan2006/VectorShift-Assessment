@@ -58,12 +58,10 @@ export const SimulatorDashboard = () => {
     <div
       style={{
         margin: '0 24px 24px 24px',
-        background: 'var(--bg-panels-glass)',
-        backdropFilter: 'blur(12px)',
-        WebkitBackdropFilter: 'blur(12px)',
+        background: 'var(--bg-panels-opaque)',
         border: '1px solid var(--border-color)',
-        borderRadius: '16px',
-        boxShadow: '0 10px 30px var(--shadow-color)',
+        borderRadius: '12px',
+        boxShadow: '0 4px 16px var(--shadow-color)',
         fontFamily: 'inherit',
         overflow: 'hidden',
         transition: 'all 250ms ease',

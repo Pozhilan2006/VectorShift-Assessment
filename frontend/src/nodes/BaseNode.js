@@ -13,7 +13,7 @@ const globalStyleSheet = `
   .node-control:focus {
     border-color: var(--color-primary) !important;
     background-color: var(--bg-inputs-hover) !important;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25) !important;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25) !important;
   }
   .tactile-btn {
     transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
@@ -26,11 +26,11 @@ const globalStyleSheet = `
     outline-offset: 2px;
   }
   .react-flow__handle {
-    transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+    transition: all 150ms ease !important;
   }
   .react-flow__handle:active {
     background: var(--color-primary-hover) !important;
-    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.4), 0 0 12px rgba(59, 130, 246, 0.9), 0 2px 4px var(--shadow-color) !important;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.3), 0 1px 2px var(--shadow-color) !important;
   }
   
   /* Keyboard selection focus borders for ReactFlow nodes */
@@ -38,17 +38,17 @@ const globalStyleSheet = `
     outline: none !important;
   }
   .react-flow__node:focus-visible > div {
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.45), 0 16px 40px var(--shadow-color) !important;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.3), 0 4px 12px var(--shadow-color) !important;
     border-color: var(--color-primary) !important;
   }
 `;
 
-// Shared form control styles for our glassmorphism UI
+// Shared form control styles for our UI
 const formControlStyle = {
   width: '100%',
   padding: '8px 12px',
   border: '1px solid var(--border-color)',
-  borderRadius: '8px',
+  borderRadius: '6px',
   fontFamily: 'inherit',
   fontSize: '13px',
   color: 'var(--text-primary)',
@@ -119,14 +119,14 @@ const HoverableHandle = ({ id, style, ...handleProps }) => {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       style={{
-        width: '12px',
-        height: '12px',
+        width: '10px',
+        height: '10px',
         background: isHovered ? 'var(--color-primary-hover)' : 'var(--color-primary)',
         border: '2px solid var(--bg-cards-opaque)',
         boxShadow: isHovered
-          ? '0 0 0 3px rgba(59, 130, 246, 0.35), 0 0 8px rgba(59, 130, 246, 0.8), 0 2px 4px var(--shadow-color)'
-          : '0 2px 4px var(--shadow-color)',
-        transition: 'all 200ms cubic-bezier(0.4, 0, 0.2, 1)',
+          ? '0 0 0 3px rgba(37, 99, 235, 0.3), 0 1px 2px var(--shadow-color)'
+          : '0 1px 2px var(--shadow-color)',
+        transition: 'all 150ms ease',
         cursor: 'pointer',
         zIndex: 20,
         ...style, // preserve specific top/left positions injected by nodes
@@ -148,27 +148,27 @@ export const BaseNode = ({
 
   let borderStyle = selected 
     ? '1.5px solid var(--color-primary)' 
-    : (isHovered ? '1px solid var(--text-secondary)' : '1px solid var(--border-color)');
+    : (isHovered ? '1px solid var(--text-muted)' : '1px solid var(--border-color)');
     
   let shadowStyle = selected
-    ? '0 0 0 3px rgba(59, 130, 246, 0.25), 0 16px 40px var(--shadow-hover)'
+    ? '0 4px 12px var(--shadow-hover)'
     : (isHovered 
-      ? '0 16px 40px var(--shadow-hover)' 
-      : '0 12px 30px var(--shadow-color)');
+      ? '0 3px 8px var(--shadow-hover)' 
+      : '0 1px 4px var(--shadow-color)');
 
   let backgroundStyle = isHovered ? 'var(--bg-cards-hover)' : 'var(--bg-cards)';
 
   if (executionStatus === 'running') {
     borderStyle = '2px solid var(--color-primary)';
-    shadowStyle = '0 0 16px rgba(59, 130, 246, 0.55), 0 16px 40px var(--shadow-hover)';
+    shadowStyle = '0 4px 12px rgba(37, 99, 235, 0.2)';
     backgroundStyle = 'var(--bg-cards-hover)';
   } else if (executionStatus === 'completed') {
     borderStyle = '2px solid var(--color-success)';
-    shadowStyle = '0 0 16px rgba(34, 197, 94, 0.55), 0 16px 40px var(--shadow-hover)';
+    shadowStyle = '0 4px 12px rgba(34, 197, 94, 0.2)';
     backgroundStyle = 'var(--bg-cards-hover)';
   } else if (executionStatus === 'failed') {
     borderStyle = '2px solid var(--color-error)';
-    shadowStyle = '0 0 16px rgba(239, 68, 68, 0.55), 0 16px 40px var(--shadow-hover)';
+    shadowStyle = '0 4px 12px rgba(239, 68, 68, 0.2)';
     backgroundStyle = 'var(--bg-cards-hover)';
   }
 
@@ -181,12 +181,10 @@ export const BaseNode = ({
       style={{
         background: backgroundStyle,
         border: borderStyle,
-        borderRadius: '14px',
+        borderRadius: '12px',
         boxShadow: shadowStyle,
-        transform: isHovered ? 'translateY(-2px)' : 'none',
-        transition: 'all 180ms cubic-bezier(0.4, 0, 0.2, 1)',
-        backdropFilter: 'blur(8px)',
-        WebkitBackdropFilter: 'blur(8px)', // Safari support
+        transform: 'none',
+        transition: 'all 150ms ease',
         padding: '16px',
         boxSizing: 'border-box',
         fontFamily: 'inherit',

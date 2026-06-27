@@ -1,27 +1,28 @@
 :root {
   --bg-app: #f8fafc;
-  --bg-canvas: radial-gradient(circle, #f8fafc 0%, #f1f5f9 100%);
+  --bg-canvas: #f8fafc;
   --bg-canvas-pure: #f8fafc;
-  --bg-panels: rgba(255, 255, 255, 0.65);
+  --bg-panels: #ffffff;
   --bg-panels-opaque: #ffffff;
   --bg-panels-glass: rgba(255, 255, 255, 0.85);
-  --bg-cards: rgba(255, 255, 255, 0.75);
-  --bg-cards-hover: rgba(255, 255, 255, 0.92);
+  --bg-cards: #ffffff;
+  --bg-cards-hover: #f8fafc;
   --bg-cards-opaque: #ffffff;
   --border-color: #cbd5e1;
   --border-color-subtle: rgba(203, 213, 225, 0.5);
-  --color-primary: #3b82f6;
-  --color-primary-hover: #1d4ed8;
+  --color-primary: #2563eb;
+  --color-primary-hover: #3b82f6;
   --color-success: #22c55e;
   --color-warning: #f59e0b;
   --color-error: #ef4444;
   --text-primary: #1e293b;
   --text-secondary: #64748b;
-  --bg-inputs: rgba(255, 255, 255, 0.9);
-  --bg-inputs-hover: #ffffff;
-  --grid-color: #cbd5e1;
-  --shadow-color: rgba(15, 23, 42, 0.08);
-  --shadow-hover: rgba(15, 23, 42, 0.12);
+  --text-muted: #94a3b8;
+  --bg-inputs: #f1f5f9;
+  --bg-inputs-hover: #e2e8f0;
+  --grid-color: rgba(203, 213, 225, 0.5);
+  --shadow-color: rgba(15, 23, 42, 0.04);
+  --shadow-hover: rgba(15, 23, 42, 0.08);
   --scrollbar-thumb: #cbd5e1;
   --scrollbar-thumb-hover: #94a3b8;
   --node-header-border: rgba(203, 213, 225, 0.5);
@@ -29,33 +30,34 @@
 }
 
 :root[data-theme='dark'] {
-  --bg-app: #0f172a;
-  --bg-canvas: radial-gradient(circle, #0f172a 0%, #111827 100%);
+  --bg-app: #0B0F17;
+  --bg-canvas: #111827;
   --bg-canvas-pure: #111827;
-  --bg-panels: rgba(30, 41, 59, 0.65);
-  --bg-panels-opaque: #1e293b;
-  --bg-panels-glass: rgba(30, 41, 59, 0.85);
-  --bg-cards: rgba(31, 41, 55, 0.75);
-  --bg-cards-hover: rgba(31, 41, 55, 0.92);
-  --bg-cards-opaque: #1f2937;
-  --border-color: #334155;
-  --border-color-subtle: rgba(51, 65, 85, 0.5);
-  --color-primary: #3b82f6;
-  --color-primary-hover: #2563eb;
-  --color-success: #22c55e;
-  --color-warning: #f59e0b;
-  --color-error: #ef4444;
-  --text-primary: #f8fafc;
-  --text-secondary: #cbd5e1;
-  --bg-inputs: rgba(15, 23, 42, 0.8);
-  --bg-inputs-hover: #0f172a;
-  --grid-color: #334155;
-  --shadow-color: rgba(0, 0, 0, 0.3);
-  --shadow-hover: rgba(0, 0, 0, 0.45);
-  --scrollbar-thumb: #475569;
-  --scrollbar-thumb-hover: #64748b;
-  --node-header-border: rgba(51, 65, 85, 0.5);
-  --modal-overlay: rgba(0, 0, 0, 0.6);
+  --bg-panels: #161B22;
+  --bg-panels-opaque: #1A202C;
+  --bg-panels-glass: rgba(22, 27, 34, 0.8);
+  --bg-cards: #202938;
+  --bg-cards-hover: #243042;
+  --bg-cards-opaque: #202938;
+  --border-color: #313B4D;
+  --border-color-subtle: rgba(49, 59, 77, 0.4);
+  --color-primary: #2563EB;
+  --color-primary-hover: #3B82F6;
+  --color-success: #22C55E;
+  --color-warning: #F59E0B;
+  --color-error: #EF4444;
+  --text-primary: #F8FAFC;
+  --text-secondary: #94A3B8;
+  --text-muted: #64748B;
+  --bg-inputs: #242E42;
+  --bg-inputs-hover: #2c3952;
+  --grid-color: rgba(49, 59, 77, 0.4);
+  --shadow-color: rgba(0, 0, 0, 0.25);
+  --shadow-hover: rgba(0, 0, 0, 0.35);
+  --scrollbar-thumb: #313B4D;
+  --scrollbar-thumb-hover: #4b5563;
+  --node-header-border: rgba(49, 59, 77, 0.6);
+  --modal-overlay: rgba(5, 7, 10, 0.7);
 }
 
 body {
@@ -68,6 +70,7 @@ body {
   background-color: var(--bg-app);
   color: var(--text-primary);
   transition: background-color 200ms ease, color 200ms ease;
+  overflow: hidden; /* Prevent body scroll, layout takes full height */
 }
 
 code {

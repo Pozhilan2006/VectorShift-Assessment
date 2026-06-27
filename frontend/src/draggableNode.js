@@ -151,16 +151,16 @@ export const DraggableNode = ({ type, label }) => {
         gap: '8px',
         padding: '8px 14px',
         height: '38px',
-        borderRadius: '10px',
-        background: isExecuting ? 'var(--bg-inputs)' : (isHovered ? accent.hoverBg : 'var(--bg-cards)'),
-        border: isExecuting ? '1px solid var(--border-color)' : (isHovered ? `1.5px solid ${accent.color}` : '1px solid var(--border-color)'),
-        color: isExecuting ? 'var(--text-secondary)' : (isHovered ? accent.color : 'var(--text-primary)'),
+        borderRadius: '8px',
+        background: isExecuting ? 'var(--bg-inputs)' : (isHovered ? 'var(--bg-inputs-hover)' : 'var(--bg-cards)'),
+        border: isExecuting ? '1px solid var(--border-color)' : (isHovered ? '1px solid var(--text-muted)' : '1px solid var(--border-color)'),
+        color: 'var(--text-primary)',
         opacity: isExecuting ? 0.6 : 1,
         boxShadow: !isExecuting && isHovered
-          ? `0 6px 12px ${accent.glow}, 0 2px 4px var(--shadow-color)`
-          : '0 2px 4px var(--shadow-color)',
+          ? '0 2px 6px var(--shadow-hover)'
+          : '0 1px 2px var(--shadow-color)',
         transform: !isExecuting && isHovered ? 'translateY(-1px)' : 'none',
-        transition: 'all 200ms cubic-bezier(0.4, 0, 0.2, 1)',
+        transition: 'all 150ms ease',
         fontFamily: 'inherit',
         fontSize: '13px',
         fontWeight: '500',
@@ -174,7 +174,7 @@ export const DraggableNode = ({ type, label }) => {
         display: 'flex', 
         alignItems: 'center',
         color: isExecuting ? 'var(--border-color)' : (isHovered ? accent.color : 'var(--text-secondary)'),
-        transition: 'color 200ms ease'
+        transition: 'color 150ms ease'
       }}>
         {nodeIcons[type] || null}
       </span>

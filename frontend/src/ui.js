@@ -44,23 +44,19 @@ const selector = (state) => ({
 
 // MiniMap styling helper
 const miniMapStyle = {
-  backgroundColor: 'var(--bg-panels-glass)',
-  backdropFilter: 'blur(8px)',
-  WebkitBackdropFilter: 'blur(8px)',
+  backgroundColor: 'var(--bg-panels-opaque)',
   border: '1px solid var(--border-color)',
   borderRadius: '12px',
-  boxShadow: '0 4px 12px var(--shadow-color)',
+  boxShadow: '0 2px 8px var(--shadow-color)',
   overflow: 'hidden',
 };
 
 // Controls styling helper
 const controlsStyle = {
-  backgroundColor: 'var(--bg-panels-glass)',
-  backdropFilter: 'blur(8px)',
-  WebkitBackdropFilter: 'blur(8px)',
+  backgroundColor: 'var(--bg-panels-opaque)',
   border: '1px solid var(--border-color)',
-  borderRadius: '10px',
-  boxShadow: '0 4px 12px var(--shadow-color)',
+  borderRadius: '8px',
+  boxShadow: '0 2px 8px var(--shadow-color)',
   overflow: 'hidden',
   display: 'flex',
   flexDirection: 'column',
@@ -117,12 +113,10 @@ const PipelineInfoCard = () => {
         right: '16px',
         zIndex: 10,
         width: '160px',
-        background: 'var(--bg-panels-glass)',
-        backdropFilter: 'blur(8px)',
-        WebkitBackdropFilter: 'blur(8px)',
+        background: 'var(--bg-panels-opaque)',
         border: '1px solid var(--border-color)',
         borderRadius: '12px',
-        boxShadow: '0 4px 16px var(--shadow-color)',
+        boxShadow: '0 2px 8px var(--shadow-color)',
         padding: '12px 14px',
         fontFamily: 'inherit',
         display: 'flex',
@@ -242,7 +236,7 @@ export const PipelineUI = () => {
           ref={reactFlowWrapper} 
           style={{
             width: '100%', 
-            height: '70vh',
+            height: '100%',
             background: 'var(--bg-canvas)',
             position: 'relative'
           }}
@@ -316,12 +310,10 @@ export const PipelineUI = () => {
                   maxWidth: '340px',
                   textAlign: 'center',
                   padding: '32px 24px',
-                  background: 'var(--bg-panels-glass)',
-                  borderRadius: '16px',
+                  background: 'var(--bg-panels-opaque)',
+                  borderRadius: '12px',
                   border: '1px dashed var(--border-color)',
-                  boxShadow: '0 8px 32px var(--shadow-color)',
-                  backdropFilter: 'blur(6px)',
-                  WebkitBackdropFilter: 'blur(6px)',
+                  boxShadow: '0 4px 12px var(--shadow-color)',
                 }}>
                   <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                     <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
@@ -365,9 +357,9 @@ export const PipelineUI = () => {
                 elementsSelectable={!isExecuting}
                 deleteKeyCode={["Backspace", "Delete"]}
             >
-                <Background color={theme === 'dark' ? '#334155' : '#CBD5E1'} gap={gridSize} size={1.5} /> {/* Lighter dots */}
+                <Background color={theme === 'dark' ? 'rgba(74, 85, 104, 0.45)' : 'rgba(203, 213, 225, 0.5)'} gap={gridSize} size={1.5} /> {/* Lighter dots */}
                 <Controls style={controlsStyle} /> {/* Rounded controls */}
-                <MiniMap style={miniMapStyle} maskColor={theme === 'dark' ? 'rgba(15, 23, 42, 0.6)' : 'rgba(241, 245, 249, 0.4)'} nodeColor="#3B82F6" /> {/* Better minimap styling */}
+                <MiniMap style={miniMapStyle} maskColor={theme === 'dark' ? 'rgba(11, 15, 23, 0.6)' : 'rgba(248, 250, 252, 0.4)'} nodeColor={theme === 'dark' ? '#3b82f6' : '#2563eb'} /> {/* Better minimap styling */}
             </ReactFlow>
         </div>
         </>
